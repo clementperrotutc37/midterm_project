@@ -3,6 +3,7 @@ import requests
 import csv
 import os
 import time
+import json
 
 token = "UdC5HKZB1aruy8e-Giv_fg"
 
@@ -25,7 +26,7 @@ if __name__ == "__main__":
         print("Error: Failed to create task, status code {}".format(r.status_code))
         sys.exit(1)
 
-    task_id = r.json().get("task_id")
+    task_id = json.loads(r.text).get("task_id")
     print("Task ID: {}".format(task_id))
 
     if task_id is None:
@@ -41,7 +42,7 @@ if __name__ == "__main__":
         time.sleep(5)
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
-    report = report_response.json()
+    report = json.loads(report_response.text)
     print("Report: {}".format(report))
     
     #parse the report and extract the csv file
