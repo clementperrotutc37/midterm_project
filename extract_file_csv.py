@@ -5,6 +5,9 @@ import os
 import time
 import json
 
+
+
+
 token = "UdC5HKZB1aruy8e-Giv_fg"
 
 # Add your code to error checking if task_id is None.
@@ -43,10 +46,11 @@ if __name__ == "__main__":
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
     report = json.loads(report_response.text)
+
     print("Report: {}".format(report))
     
     #parse the report and extract the csv file
-    calls = report.get("data", [])
+    calls = report.get("behavior", [])
     if not calls:
         print("No calls found in the report.")
         sys.exit(1)
