@@ -13,7 +13,7 @@ if __name__ == "__main__":
         sys.exit(1)
     
     url = sys.argv[1]
-    print(f"URL passed as parameter: {url}")
+    print("URL passed as parameter: {}".format(url))
     REST_URL = "http://localhost:8090/tasks/create/url"
     HEADERS = {"Authorization": f"Bearer {token}"}
 
