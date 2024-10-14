@@ -46,7 +46,7 @@ if __name__ == "__main__":
     print("Report: {}".format(report))
     
     #parse the report and extract the csv file
-    calls = report.get("calls", [])
+    calls = report.get("data", [])
     if not calls:
         print("No calls found in the report.")
         sys.exit(1)
