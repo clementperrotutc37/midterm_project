@@ -4,6 +4,8 @@ import csv
 import os
 
 
+token = "UdC5HKZB1aruy8e-Giv_fg"
+
 # Add your code to error checking if task_id is None.
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -13,7 +15,7 @@ if __name__ == "__main__":
     url = sys.argv[1]
     print(f"URL passed as parameter: {url}")
     REST_URL = "http://localhost:8090/tasks/create/url"
-    HEADERS = {"Authorization": "Bearer S4MPL3"}
+    HEADERS = {"Authorization": f"Bearer {token}"}
 
     data = {"url": url}
     r = requests.post(REST_URL, headers=HEADERS, data=data)
