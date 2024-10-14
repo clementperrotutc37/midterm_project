@@ -3,7 +3,6 @@ import requests
 import csv
 import os
 
-
 token = "UdC5HKZB1aruy8e-Giv_fg"
 
 # Add your code to error checking if task_id is None.
@@ -15,29 +14,32 @@ if __name__ == "__main__":
     url = sys.argv[1]
     print("URL passed as parameter: {}".format(url))
     REST_URL = "http://localhost:8090/tasks/create/url"
-    HEADERS = {"Authorization": f"Bearer {token}"}
+    HEADERS = {"Authorization": "Bearer {}".format(token)}
 
     data = {"url": url}
     r = requests.post(REST_URL, headers=HEADERS, data=data)
 
     # Add your code to error checking for r.status_code.
+    if r.status_code != 200:
+        print("Error: Failed to create task, status code {}".format(r.status_code))
+        sys.exit(1)
 
-    task_id = r.json()["task_id"]
-    print(f"Task ID: {task_id}")
+    task_id = r.json().get("task_id")
+    print("Task ID: {}".format(task_id))
 
     if task_id is None:
         print("Error: task_id is None")
         sys.exit(1)
 
-    REPORT_URL = f"http://localhost:8090/tasks/report/{task_id}"
+    REPORT_URL = "http://localhost:8090/tasks/report/{}".format(task_id)
     report_response = requests.get(REPORT_URL, headers=HEADERS)
 
     if report_response.status_code != 200:
-        print(f"Error fetching report: {report_response.status_code}")
+        print("Error fetching report: {}".format(report_response.status_code))
         sys.exit(1)
 
     report = report_response.json()
-    print(f"Report: {report}")
+    print("Report: {}".format(report))
     
     #parse the report and extract the csv file
     calls = report.get("calls", [])
@@ -45,8 +47,8 @@ if __name__ == "__main__":
         print("No calls found in the report.")
         sys.exit(1)
 
-    csv_file = f"{url}.csv"
-    with open(csv_file, mode='w', newline='') as file:
+    csv_file = "{}.csv".format(url)
+    with open(csv_file, mode='wb') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
 
@@ -56,14 +58,8 @@ if __name__ == "__main__":
             time = call.get("time", "N/A")
             writer.writerow([category, api, time])
 
-    print(f"CSV file '{csv_file}' created successfully.")
+    print("CSV file '{}' created successfully.".format(csv_file))
     if os.path.exists(csv_file):
-        print(f"CSV file '{csv_file}' has been saved successfully.")
+        print("CSV file '{}' has been saved successfully.".format(csv_file))
     else:
-        print(f"Error: CSV file '{csv_file}' was not saved.")
-
-
-
-
-
-
+        print("Error: CSV file '{}' was not saved.".format(csv_file))
