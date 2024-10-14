@@ -2,6 +2,7 @@ import sys
 import requests
 import csv
 import os
+import time
 
 token = "UdC5HKZB1aruy8e-Giv_fg"
 
@@ -34,9 +35,11 @@ if __name__ == "__main__":
     REPORT_URL = "http://localhost:8090/tasks/report/{}".format(task_id)
     report_response = requests.get(REPORT_URL, headers=HEADERS)
 
-    if report_response.status_code != 200:
-        print("Error fetching report: {}".format(report_response.status_code))
-        sys.exit(1)
+    while report_response.status_code != 200:
+        #print("Error fetching report: {}".format(report_response.status_code))
+        print("Waiting for 5 seconds before retrying...")
+        time.sleep(5)
+        report_response = requests.get(REPORT_URL, headers=HEADERS)
 
     report = report_response.json()
     print("Report: {}".format(report))
