@@ -41,11 +41,8 @@ if __name__ == "__main__":
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
     jsonl_file = "report.jsonl"
-    try:
-        report = report_response.json()
-    except json.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-        sys.exit(1)
+    report = report_response.json()
+    report = json.loads(json.dumps(report, ensure_ascii=False))
     processes = report.get('behavior', {}).get('processes', [])
     if not processes:
         print("No processes found in the report.")
@@ -61,7 +58,6 @@ if __name__ == "__main__":
         writer.writerow(["category", "api", "time"])  # Write CSV header
         with open(jsonl_file, 'r', encoding='utf-8') as jsonl_file:
             for line in jsonl_file:
-                print(line)
                 process = json.loads(line)
                 calls = process.get('calls', [])
                 if not calls:
