@@ -63,7 +63,13 @@ if __name__ == "__main__":
                 process = json.loads(line)
                 print(process)
                 print(f"Processing line {i}")
-                calls = process.get('calls', [])
+
+                p = process.get('processes', [])
+                if not p:
+                    print("No processes found in the report.")
+                    sys.exit(1)
+                calls = p[0].get('calls', [])
+                
                 if not calls:
                     print("No calls found in the report.")
                     sys.exit(1)
