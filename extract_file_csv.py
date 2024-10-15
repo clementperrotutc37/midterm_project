@@ -49,7 +49,7 @@ if __name__ == "__main__":
         print("No processes found in the report.")
         sys.exit(1)
 
-    csv_file = f"{url}.csv"
+    csv_file = f"{url[-9:]}.csv"
     with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
