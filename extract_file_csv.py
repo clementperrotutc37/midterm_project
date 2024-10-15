@@ -38,8 +38,8 @@ if __name__ == "__main__":
     while report_response.status_code != 200:
         print("Waiting for 5 seconds before retrying...")
         time.sleep(5)
-        report_response = requests.get(REPORT_URL, headers=HEADERS)*
-        
+        report_response = requests.get(REPORT_URL, headers=HEADERS)
+
     print(report_response.text.replace("'", '"')[36500:36600])
 
     report = json.loads(report_response.text.replace("'", '"'))
