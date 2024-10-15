@@ -41,7 +41,7 @@ if __name__ == "__main__":
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
     jsonl_file = "report.jsonl"
-    report = json.loads(report_response.text.replace("'", '"'))
+    report = report_response.json()
     processes = report.get('behavior', {}).get('processes', [])
     if not processes:
         print("No processes found in the report.")
