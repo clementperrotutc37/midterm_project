@@ -56,11 +56,13 @@ if __name__ == "__main__":
     with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
-        with open(jsonl_file, 'r', encoding='utf-8') as jsonl_file:
-            for line in jsonl_file:
-                print("affiche la ligne")
-                print(line)
+        with open(jsonl_file, 'r', encoding='utf-8') as jsonl_lines:
+            i = 0 
+            for line in jsonl_lines:
+                i+=1
                 process = json.loads(line)
+                print(process)
+                print(f"Processing line {i}")
                 calls = process.get('calls', [])
                 if not calls:
                     print("No calls found in the report.")
