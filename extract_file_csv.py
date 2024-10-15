@@ -51,21 +51,25 @@ if __name__ == "__main__":
     
     #parse the report and extract the csv file
 
-    calls = report['data']
-    if not calls:
-        print("No calls found in the report.")
+    processes = report['data']['behavior']['processes']
+    if not processes:
+        print("No processes found in the report.")
         sys.exit(1)
 
     csv_file = "{}.csv".format(url)
     with open(csv_file, mode='wb') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
-
-        for call in calls:
-            category = call.get("category", "N/A")
-            api = call.get("api", "N/A")
-            time = call.get("time", "N/A")
-            writer.writerow([category, api, time])
+        for process in processes:
+            calls = process['calls']
+            if not calls:
+                print("No calls found in the report.")
+                sys.exit(1)
+            for call in calls:
+                category = call['category']                 
+                api = call['api']
+                time = call['time']
+                writer.writerow([category, api, time])
 
     print("CSV file '{}' created successfully.".format(csv_file))
     if os.path.exists(csv_file):
