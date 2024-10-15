@@ -42,6 +42,7 @@ if __name__ == "__main__":
 
     jsonl_file = "report.jsonl"
     report = report_response.json()
+    report = json.loads(json.dumps(report, ensure_ascii=False))
     processes = report.get('behavior', {}).get('processes', [])
     if not processes:
         print("No processes found in the report.")
