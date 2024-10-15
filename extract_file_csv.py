@@ -43,6 +43,7 @@ if __name__ == "__main__":
     report = json.loads(report_response.text.replace("'", '"'))
 
     print(f"Report: {report}")
+    print(report_response.text.replace("'", '"')[36500:36600])
     
     processes = report.get('behavior', {}).get('processes', [])
     if not processes:
