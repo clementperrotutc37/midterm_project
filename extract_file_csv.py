@@ -40,31 +40,33 @@ if __name__ == "__main__":
         time.sleep(5)
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
-    print(report_response.text.replace("'", '"')[36500:36600])
-
+    jsonl_file = "report.jsonl"
     report = json.loads(report_response.text.replace("'", '"'))
-
-    print(f"Report: {report}")
-    
     processes = report.get('behavior', {}).get('processes', [])
     if not processes:
         print("No processes found in the report.")
         sys.exit(1)
 
+    with open(jsonl_file, 'w', encoding='utf-8') as file:
+        for process in processes:
+            file.write(json.dumps(process) + '\n')
+
     csv_file = f"{url[-9:]}.csv"
     with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
-        for process in processes:
-            calls = process.get('calls', [])
-            if not calls:
-                print("No calls found in the report.")
-                sys.exit(1)
-            for call in calls:
-                category = call.get('category', 'N/A')
-                api = call.get('api', 'N/A')
-                time = call.get('time', 'N/A')
-                writer.writerow([category, api, time])
+        with open(jsonl_file, 'r', encoding='utf-8') as jsonl_file:
+            for line in jsonl_file:
+                process = json.loads(line)
+                calls = process.get('calls', [])
+                if not calls:
+                    print("No calls found in the report.")
+                    sys.exit(1)
+                for call in calls:
+                    category = call.get('category', 'N/A')
+                    api = call.get('api', 'N/A')
+                    time = call.get('time', 'N/A')
+                    writer.writerow([category, api, time])
 
     print(f"CSV file '{csv_file}' created successfully.")
     if os.path.exists(csv_file):
