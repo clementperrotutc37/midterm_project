@@ -57,7 +57,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     csv_file = "{}.csv".format(url)
-    with open(csv_file, mode='wb') as file:
+    with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
         for process in processes:
