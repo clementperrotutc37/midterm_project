@@ -58,6 +58,8 @@ if __name__ == "__main__":
         writer.writerow(["category", "api", "time"])  # Write CSV header
         with open(jsonl_file, 'r', encoding='utf-8') as jsonl_file:
             for line in jsonl_file:
+                print("affiche la ligne")
+                print(line)
                 process = json.loads(line)
                 calls = process.get('calls', [])
                 if not calls:
