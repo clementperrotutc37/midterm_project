@@ -6,74 +6,66 @@ import time
 import json
 import io
 
-
-
-
 token = "UdC5HKZB1aruy8e-Giv_fg"
 
-# Add your code to error checking if task_id is None.
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python extract_file_csv.py <URL>")
         sys.exit(1)
     
     url = sys.argv[1]
-    print("URL passed as parameter: {}".format(url))
+    print(f"URL passed as parameter: {url}")
     REST_URL = "http://localhost:8090/tasks/create/url"
-    HEADERS = {"Authorization": "Bearer {}".format(token)}
+    HEADERS = {"Authorization": f"Bearer {token}"}
 
     data = {"url": url}
     r = requests.post(REST_URL, headers=HEADERS, data=data)
 
-    # Add your code to error checking for r.status_code.
     if r.status_code != 200:
-        print("Error: Failed to create task, status code {}".format(r.status_code))
+        print(f"Error: Failed to create task, status code {r.status_code}")
         sys.exit(1)
 
     task_id = json.loads(r.text).get("task_id")
-    print("Task ID: {}".format(task_id))
+    print(f"Task ID: {task_id}")
 
     if task_id is None:
         print("Error: task_id is None")
         sys.exit(1)
 
-    REPORT_URL = "http://localhost:8090/tasks/report/{}".format(task_id)
+    REPORT_URL = f"http://localhost:8090/tasks/report/{task_id}"
     report_response = requests.get(REPORT_URL, headers=HEADERS)
 
     while report_response.status_code != 200:
-        #print("Error fetching report: {}".format(report_response.status_code))
         print("Waiting for 5 seconds before retrying...")
         time.sleep(5)
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
-    report = json.loads(report_response.text.replace("\\", r"\\"))
+    report = json.loads(report_response.text)
 
-    print("Report: {}".format(report))
+    print(f"Report: {report}")
     
-    #parse the report and extract the csv file
-
-    processes = report['behavior']['processes']
+    processes = report.get('behavior', {}).get('processes', [])
     if not processes:
         print("No processes found in the report.")
         sys.exit(1)
 
-    csv_file = "{}.csv".format(url)
+    csv_file = f"{url}.csv"
     with io.open(csv_file, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(["category", "api", "time"])  # Write CSV header
         for process in processes:
-            calls = process['calls']
+            calls = process.get('calls', [])
             if not calls:
                 print("No calls found in the report.")
                 sys.exit(1)
             for call in calls:
-                category = call['category']                 
-                api = call['api']
-                time = call['time']
+                category = call.get('category', 'N/A')
+                api = call.get('api', 'N/A')
+                time = call.get('time', 'N/A')
                 writer.writerow([category, api, time])
 
-    print("CSV file '{}' created successfully.".format(csv_file))
+    print(f"CSV file '{csv_file}' created successfully.")
     if os.path.exists(csv_file):
-        print("CSV file '{}' has been saved successfully.".format(csv_file))
+        print(f"CSV file '{csv_file}' has been saved successfully.")
     else:
-        print("Error: CSV file '{}' was not saved.".format(csv_file))
+        print(f"Error: CSV file '{csv_file}' was not saved.")
