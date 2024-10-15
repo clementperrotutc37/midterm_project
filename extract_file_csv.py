@@ -40,7 +40,7 @@ if __name__ == "__main__":
         time.sleep(5)
         report_response = requests.get(REPORT_URL, headers=HEADERS)
 
-    report = json.loads(report_response.text)
+    report = json.loads(report_response.text.replace("'", '"'))
 
     print(f"Report: {report}")
     
