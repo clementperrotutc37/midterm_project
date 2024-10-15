@@ -51,7 +51,7 @@ if __name__ == "__main__":
     
     #parse the report and extract the csv file
 
-    processes = report['data']['behavior']['processes']
+    processes = report['behavior']['processes']
     if not processes:
         print("No processes found in the report.")
         sys.exit(1)
