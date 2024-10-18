@@ -5,6 +5,7 @@ import os
 import time
 import json
 import io
+import zipfile
 
 token = "UdC5HKZB1aruy8e-Giv_fg"
 
@@ -13,19 +14,43 @@ if __name__ == "__main__":
         print("Usage: python extract_file_csv.py <URL>")
         sys.exit(1)
     
-    url = sys.argv[1]
-    print(f"URL passed as parameter: {url}")
-    REST_URL = "http://localhost:8090/tasks/create/url"
+    path_zip = sys.argv[1]
+    print(f"Path passed as parameter: {path_zip}")
+
+    # Create the path if it does not exist
+    extracted_files_path = "/home/username/extracted_files"
+    if not os.path.exists(extracted_files_path):
+        os.makedirs(extracted_files_path)
+
+    # Extract the zip file
+    with zipfile.ZipFile(path_zip, 'r') as zip_ref:
+        zip_ref.extractall("/home/username/extracted_files")
+
+    # Loop through the extracted files
+    extracted_files_path = "/home/username/extracted_files"
+    for root, dirs, files in os.walk(extracted_files_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            print(f"Extracted file: {file_path}")
+            
+
+    """
+
+    REST_URL = "http://localhost:8090/tasks/create/file"
+    SAMPLE_FILE = "/path/to/malwr.exe"
     HEADERS = {"Authorization": f"Bearer {token}"}
 
-    data = {"url": url}
-    r = requests.post(REST_URL, headers=HEADERS, data=data)
+    with open(SAMPLE_FILE, "rb") as sample:
+        files = {"file": ("temp_file_name", sample)}
+        r = requests.post(REST_URL, headers=HEADERS, files=files)
+        if r.status_code != 200:
+            print(f"Error: Failed to create task, status code {r.status_code}")
+            sys.exit(1)
 
-    if r.status_code != 200:
-        print(f"Error: Failed to create task, status code {r.status_code}")
-        sys.exit(1)
 
-    task_id = json.loads(r.text).get("task_id")
+    # Add your code to error checking for r.status_code.
+
+    task_id = r.json()["task_id"]
     print(f"Task ID: {task_id}")
 
     if task_id is None:
@@ -80,3 +105,6 @@ if __name__ == "__main__":
                     print(f"CSV file '{csv_file}' has been saved successfully.")
                 else:
                     print(f"Error: CSV file '{csv_file}' was not saved.")
+
+
+    """
