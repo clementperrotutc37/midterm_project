@@ -52,18 +52,18 @@ if __name__ == "__main__":
         for process in processes:
             file.write(json.dumps(process) + '\n')
 
-    csv_file = f"{url[-9:]}.csv"
-    with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow(["category", "api", "time"])  # Write CSV header
-        with open(jsonl_file, 'r', encoding='utf-8') as jsonl_lines:
-            i = 0 
-            for line in jsonl_lines:
-                i+=1
-                process = json.loads(line)
-                print(process)
-                print(f"Processing line {i}")
-              
+    
+    with open(jsonl_file, 'r', encoding='utf-8') as jsonl_lines:
+        i = 0 
+        for line in jsonl_lines:
+            i+=1
+            process = json.loads(line)
+            print(process)
+            print(f"Processing line {i}")
+            csv_file = f"{url[-9:]}_{i}.csv"
+            with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                writer.writerow(["category", "api", "time"])  # Write CSV header
                 calls = process.get('calls', [])
                 print(calls)
                 if not calls:
@@ -74,9 +74,9 @@ if __name__ == "__main__":
                     api = call.get('api', 'N/A')
                     time = call.get('time', 'N/A')
                     writer.writerow([category, api, time])
-
-    print(f"CSV file '{csv_file}' created successfully.")
-    if os.path.exists(csv_file):
-        print(f"CSV file '{csv_file}' has been saved successfully.")
-    else:
-        print(f"Error: CSV file '{csv_file}' was not saved.")
+                    
+                print(f"CSV file '{csv_file}' created successfully.")
+                if os.path.exists(csv_file):
+                    print(f"CSV file '{csv_file}' has been saved successfully.")
+                else:
+                    print(f"Error: CSV file '{csv_file}' was not saved.")

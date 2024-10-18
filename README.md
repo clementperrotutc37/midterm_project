@@ -12,7 +12,7 @@ Then change the variable token in extract_file_csv.py
 ```bash 
 #clone it
 cd midterm_project
-python3 extract_file_csv.py <URL_VIRUS_SHARE>
+python3 extract_file_csv_from_url.py <URL_VIRUS_SHARE>
 #python3 extract_file_csv.py https://virusshare.com/hashfiles/VirusShare_00000.md5
 ```
 
