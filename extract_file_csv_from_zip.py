@@ -22,9 +22,10 @@ if __name__ == "__main__":
     if not os.path.exists(extracted_files_path):
         os.makedirs(extracted_files_path)
 
-    # Extract the zip file
+    # Extract the zip file with password
+    zip_password = b"infected"  # Replace with your actual password
     with zipfile.ZipFile(path_zip, 'r') as zip_ref:
-        zip_ref.extractall("/home/username/extracted_files")
+        zip_ref.extractall("/home/username/extracted_files", pwd=zip_password)
 
     # Loop through the extracted files
     extracted_files_path = "/home/username/extracted_files"
@@ -32,7 +33,7 @@ if __name__ == "__main__":
         for file in files:
             file_path = os.path.join(root, file)
             print(f"Extracted file: {file_path}")
-            
+
 
     """
 
