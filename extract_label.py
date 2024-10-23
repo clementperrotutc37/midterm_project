@@ -1,9 +1,14 @@
 import requests 
+import sys
 import json # Import the json module to handle saving JSON data 
 # Replace 'your_api_key' with your actual VirusTotal API key 
 api_key = "a3796ea0a8e15ed88bef506f3d084c5326ce2580cbe5e6224f1d6ab197b51ff4" 
 # Replace 'file_id_or_hash' with the file's actual hash (MD5, SHA1, or SHA256) 
-file_id_or_hash = "aca2d12934935b070df8f50e06a20539" 
+if len(sys.argv) < 2:
+    print("Usage: python extract_label.py <file_id_or_hash>")
+    sys.exit(1)
+
+file_id_or_hash = sys.argv[1]
 # URL for querying file reports on VirusTotal 
 url = f"https://www.virustotal.com/api/v3/files/{file_id_or_hash}" 
 # Headers need to include your API key for authorization 
